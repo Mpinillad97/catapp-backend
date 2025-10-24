@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  mongo:
+    image: mongo:6
+    container_name: catapp-mongo
+    ports: ["27017:27017"]
+    volumes: ["mongo_data:/data/db"]
+  api:
+    build: .
+    container_name: catapp-api
+    depends_on: [mongo]
+    environment:
+      PORT: 3000
+      CAT_API_URL: https://api.thecatapi.com/v1
+      CAT_API_KEY: ${CAT_API_KEY}
+      MONGO_URI: mongodb://mongo:27017/catapp
+      JWT_SECRET: ${JWT_SECRET}
+    ports: ["3000:3000"]
+volumes:
+  mongo_data:
